@@ -1,0 +1,13 @@
+{
+  "name": "my-node-app-2",
+  "version": "1.0.0",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-fileupload": "^1.2.1",
+    "gun": "^0.2020.1232",
+    "uuid4": "^2.0.2"
+  },
+  "scripts": {
+    "start": "node ./src/index.js"
+  }
+}
