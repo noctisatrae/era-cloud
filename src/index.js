@@ -26,7 +26,7 @@ app.get('/', (req, res) => {
   res.status(200).send({ msg: "Welcome to the ERA Cloud playground !" })
 })
 
-app.post('/upload', function(req, res) {
+app.post('/upload', async function(req, res) {
   let sampleFile;
   let uploadPath;
 
@@ -41,29 +41,42 @@ app.post('/upload', function(req, res) {
   let fileId = uuid4();
 
   // Use the mv() method to place the file somewhere on your server
-  sampleFile.mv(uploadPath, function(err) {
+  sampleFile.mv(uploadPath, async function(err) {
     if (err)
       return res.status(500).send(err);
-
-    res.send('File uploaded! Keep the ID : ' + fileId);
+    
+    let base64 = encode(uploadPath);
+    
+    for await(i of chunkIt(base64, 10000)) {
+      gun.get(fileId).set(i);
+    }
+    
+    await fs.unlinkSync(uploadPath)
+    
+    res.send('File uploaded! Keep the ID : ' + fileId)
   })
-  
-  let input = encode(__dirname + '/tmp/' + 'file.jpeg');
-  
-  for (i of chunkIt(input, 10000)) {
-    gun.get(fileId).set(i)
-  }
-  
-  fs.unlinkSync(uploadPath);
 });
 
 app.get('/download', async (req, res) => {
+  
   let file = req.query.id
   
-  let chunks = [];
-  gun.get(file).map().on(async (data) => {
-    chunks.push(data);
+  let chunks = []
+  
+  gun.get(file).map().on(async data => {
+    chunks.push(data)
   })
   
-  await res.send(cleanChunks(chunks.join("")))
+  decode(cleanChunks(chunks), __dirname + '/tmp2/' + 'file2.jpeg')
+  
+  res.download(__dirname + '/tmp2/' + 'file2.jpeg', file, function(err) {
+  if (err) {
+    console.log(err); // Check error if you want
+  }
+  fs.unlink(__dirname + '/tmp2/' + 'file2.jpeg', function(){
+      console.log("File was deleted") // Callback
+  });
+
+  // fs.unlinkSync(yourFilePath) // If you don't need callback
+});
 })
