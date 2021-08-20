@@ -1,5 +1,5 @@
 # era-cloud 
-dCloud with https://gun.eco ⚡️
+dCloud with https://gun.eco ⚡️ (actually, this is experimental but I managed to do pretty awesome things with it!)
 
 I didn't manage to make it work on Heroku because of the weird file system (my theory). I would have wanted to make a Digital Ocean droplet but I can't right know. Therefore, the github website & the back-end don't work. However, you can use the Docker image I just set up by typing :
 ```sh
