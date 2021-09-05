@@ -75,7 +75,7 @@ app.get('/download', async (req, res) => {
   
   decode(cleanChunks(chunks), __dirname + '/tmp2/' + file + `.${extension}`)
   
-  res.download(__dirname + '/tmp2/' + file + `.${extension}`, file + `.${extension}`, function(err) {
+  await res.download(__dirname + '/tmp2/' + file + `.${extension}`, file + `.${extension}`, function(err) {
     
     if (err) {
       console.log(err); // Check error if you want
