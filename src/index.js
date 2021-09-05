@@ -53,7 +53,7 @@ app.post('/upload', async function(req, res) {
     
     await fs.unlinkSync(uploadPath)
     
-    res.send('File uploaded! Keep the ID : ' + fileId)
+    await res.send('File uploaded! Keep the ID : ' + fileId)
   })
 });
 
