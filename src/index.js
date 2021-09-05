@@ -22,8 +22,8 @@ app.listen(PORT, () => {
   console.log('API running at http://localhost:'+PORT);
 })
 
-app.get('/', (req, res) => {
-  res.status(200).send({ msg: "Welcome to the ERA Cloud playground !" })
+app.get('/', async (req, res) => {
+  await res.send(fs.readFileSync(`${process.cwd()}/src/index.html`, 'utf-8'))
 })
 
 app.post('/upload', async function(req, res) {
@@ -80,8 +80,8 @@ app.get('/download', async (req, res) => {
     if (err) {
       console.log(err); // Check error if you want
     }
-    fs.unlink(__dirname + '/tmp2/' + 'file2.jpeg', function(){
-        console.log("File was deleted") // Callback
+    fs.unlink(__dirname + '/tmp2/' + `${file}.${extension}`, function(){
+        console.log(`${file}.${extension}`) // Callback
     });
     
   });

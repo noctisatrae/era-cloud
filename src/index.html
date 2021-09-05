@@ -1,0 +1,22 @@
+<html>
+    <body>
+        <form ref='uploadForm' 
+        id='uploadForm' 
+		method="post"
+        action='/upload' 
+        encType="multipart/form-data">
+            <input type="file" name="sampleFile" />
+        <input type='submit' value='Upload!' />
+    </form>
+		
+    <form ref='downloadForm' 
+      id='downloadForm' 
+			method="get"
+      action='/download' 
+      encType="multipart/form-data">
+        <input type="text" name="id" />
+        <input type='submit' value='Download!' />
+    </form>
+	
+    </body>
+</html>
