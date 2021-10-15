@@ -47,8 +47,11 @@ app.post('/upload', async function(req, res) {
     
     let base64 = encode(uploadPath);
     gun.get(fileId).get('extension').put({ extension: sampleFile.name.split(".")[sampleFile.name.split(".").length - 1] })
+    let b = 0;
     for await(i of chunkIt(base64, 10000)) {
-      gun.get(fileId).set(i);
+      gun.get(fileId).get(b).set(i);
+      console.log(b);
+      b++;
     }
     
     await fs.unlinkSync(uploadPath)
@@ -68,10 +71,15 @@ app.get('/download', async (req, res) => {
   // console.log(extension)
   
   let chunks = []
-  
-  gun.get(file).map().on(async data => {
-    chunks.push(data)
-  })
+
+  let c = 0;
+  while (c < 10001) {
+    console.log(c)
+    gun.get(file).get(c).map().on(async data => { chunks.push(data) })
+    c++;
+  }
+
+  console.log(chunks)
   
   decode(cleanChunks(chunks), __dirname + '/tmp2/' + file + `.${extension}`)
   
