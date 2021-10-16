@@ -4,9 +4,6 @@ const Gun = require('gun');
 const fs = require('fs');
 const uuid4 = require('uuid4');
 
-const path = require('path');
-const root = path.dirname(require.main.filename)
-
 const { encode, decode } = require('../lib/base64');
 const { chunkIt, cleanChunks } = require('../lib/chunk');
 
