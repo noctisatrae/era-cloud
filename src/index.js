@@ -46,6 +46,8 @@ app.post('/upload', async function(req, res) {
       return res.status(500).send(err);
     
     let base64 = encode(uploadPath);
+    
+    gun.get(fileId).get('name').put(sampleFile.name);
     gun.get(fileId).get('extension').put({ extension: sampleFile.name.split(".")[sampleFile.name.split(".").length - 1] })
     let b = 0;
     for await(i of chunkIt(base64, 10000)) {
@@ -83,14 +85,16 @@ app.get('/download', async (req, res) => {
   
   decode(cleanChunks(chunks), __dirname + '/tmp2/' + file + `.${extension}`)
   
-  await res.download(__dirname + '/tmp2/' + file + `.${extension}`, file + `.${extension}`, function(err) {
+  gun.get(file).get("name").once(async data => {
+    await res.download(__dirname + '/tmp2/' + file + `.${extension}`, data, function(err) {
     
-    if (err) {
-      console.log(err); // Check error if you want
-    }
-    fs.unlink(__dirname + '/tmp2/' + `${file}.${extension}`, function(){
-        console.log(`${file}.${extension}`) // Callback
+      if (err) {
+        console.log(err); // Check error if you want
+      }
+      fs.unlink(__dirname + '/tmp2/' + `${file}.${extension}`, function(){
+          console.log(`${file}.${extension}`) // Callback
+      });
+      
     });
-    
-  });
+  })
 })
